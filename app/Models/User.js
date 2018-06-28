@@ -1,9 +1,9 @@
-var mongoose = require('mongoose');
-var uniqueValidator = require('mongoose-unique-validator');
-var jwt = require('jsonwebtoken');
-var secret =  require('../config').secret
+const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 
-var UsersSchema = new mongoose.Schema({
+
+const UsersSchema = new mongoose.Schema({
    username:{
        type:String,
        required:true,
@@ -17,15 +17,22 @@ var UsersSchema = new mongoose.Schema({
    hash:String
 });
 
-UsersSchema.plugin(uniqueValidator, {message:'already taken'})
+
 
 UsersSchema.methods.setPassword = function(password){
     this.salt = crypto.randomBytes(15).toString('hex');
-    this.hash = crypto.p
+    this.hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');
 }
+
+UsersSchema.methods.validPassword = function(password){
+    var hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');
+    return this.hash === hash;
+};
+
 UsersSchema.methods.generateToken = function(){
     var today = newDate()
     var exp = newDate(today)
+    exp.setDate(today.getDate() + 60)
     return jwt.sign({
         id: this._id,
         username: this.username,
@@ -33,5 +40,6 @@ UsersSchema.methods.generateToken = function(){
     }, secret)
     };
 
+const Users = mongoose.model('users', UsersSchema);
+module.export = Users
 
-mongoose.model('User', 'UsersSchema');    
