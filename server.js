@@ -2,10 +2,16 @@
 
 const express =  require('express');
 const bodyParser = require('body-parser');
-var mongoose =  require('mongoose');
+const mongoose = require('mongoose');
+const user = require('./app/Models/User');
+const app = express()
 
 
+// Connect to mongoDB
+mongoose.connect('mongodb://localhost/mediumDb3', (err) => {
+ if (err) throw err;
+ console.log('successfully connected');
+} );
 
-const app = express();
 
 
