@@ -3,15 +3,20 @@
 const express =  require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const user = require('./app/Models/User');
-const app = express()
+const app = express();
 
 
+app.use(bodyParser.json());
+
+app.use(require('./app/Routes/routes'));
 // Connect to mongoDB
 mongoose.connect('mongodb://localhost/mediumDb3', (err) => {
- if (err) throw err;
- console.log('successfully connected');
+    if (err) throw err;
+    console.log('successfully connected');
 } );
-
+// listening to requests
+app.listen(3000, () => {
+    console.log('listen to request');
+});
 
 

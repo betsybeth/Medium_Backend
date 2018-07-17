@@ -1,8 +1,8 @@
 {
   "name": "Medium_Backend",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "An application for creating and managing blogs.",
+  "main": "server.js",
   "dependencies": {
     "body-parser": "^1.18.3",
     "crypto": "^1.0.1",
